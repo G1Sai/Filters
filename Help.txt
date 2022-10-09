@@ -1,0 +1,7 @@
+Mount in ubuntu available at mnt/c
+
+Use Gprof by adding -pg in the make file
+Run using ./blur 12 ./data/im1.pmm ./data/im1out.pmm
+When the file is run, gmon.out is created. Convert it using "gprof blur gmon.out > blur.txt"
+
+Verify everything using ./verify ./blur ./threshold
