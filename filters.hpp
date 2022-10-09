@@ -19,7 +19,7 @@ namespace Gauss {
 }
 
 Matrix blur(Matrix m, const int radius);
-std::unique_ptr<Matrix> threshold(std::unique_ptr<Matrix> dst);
+Matrix threshold(Matrix dst);
 
 }
 

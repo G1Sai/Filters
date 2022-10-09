@@ -5,7 +5,6 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include "filters.hpp"
 #include "matrix.hpp"
 #include "ppm.hpp"
-#include<memory>
 #include <cmath>
 
 namespace Filter {
@@ -88,12 +87,13 @@ Matrix blur(Matrix m, const int radius)
     return dst;
 }
 
-std::unique_ptr<Matrix> threshold(std::unique_ptr<Matrix> dst)
+Matrix threshold(Matrix m)
 {
-    unsigned sum {}, nump { dst->get_x_size() * dst->get_y_size() };
+    auto dst { m };
+    unsigned sum {}, nump { dst.get_x_size() * dst.get_y_size() };
 
     for (auto i { 0 }; i < nump; i++) {
-        sum += dst->r(i, 0) + dst->g(i, 0) + dst->b(i, 0);
+        sum += dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
     }
 
     sum /= nump;
@@ -101,15 +101,15 @@ std::unique_ptr<Matrix> threshold(std::unique_ptr<Matrix> dst)
     unsigned psum {};
 
     for (auto i { 0 }; i < nump; i++) {
-        psum = dst->r(i, 0) + dst->g(i, 0) + dst->b(i, 0);
+        psum = dst.r(i, 0) + dst.g(i, 0) + dst.b(i, 0);
         if (sum > psum) {
-            dst->r(i, 0) = dst->g(i, 0) = dst->b(i, 0) = 0;
+            dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 0;
         } else {
-            dst->r(i, 0) = dst->g(i, 0) = dst->b(i, 0) = 255;
+            dst.r(i, 0) = dst.g(i, 0) = dst.b(i, 0) = 255;
         }
     }
 
-    return std::move(dst);
+    return dst;
 }
 
 }

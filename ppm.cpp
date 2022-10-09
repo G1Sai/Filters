@@ -10,23 +10,30 @@ Author: David Holmqvist <daae19@student.bth.se>
 
 namespace PPM {
 
+std::streamoff Reader::stream_size(std::istream& f)
+{
+    std::istream::pos_type current_pos { f.tellg() };
+    if (-1 == current_pos)
+        return -1;
+    f.seekg(0, std::istream::end);
+    std::istream::pos_type end_pos { f.tellg() };
+    f.seekg(current_pos);
+    return end_pos - current_pos;
+}
+
 void Reader::fill(std::string filename)
 {
-    std::ifstream f {};
+ std::ifstream f {};
 
     f.open(filename);
+    std::string file_string {};
 
-    if (!f) {
-        stream.setstate(std::ios::failbit);
-        return;
-    }
+    std::streamoff len { stream_size(f) };
 
-    std::copy(
-        std::istreambuf_iterator<char> { f.rdbuf() },
-        std::istreambuf_iterator<char> {},
-        std::ostreambuf_iterator<char> { stream });
+    result.resize(static_cast<std::string::size_type>(len));
 
-    f.close();
+    f.rdbuf()->sgetn(&result[0], len);
+    stream=std::stringstream(result);
 }
 
 std::string Reader::get_magic_number()
@@ -79,22 +86,6 @@ std::tuple<unsigned char*, unsigned char*, unsigned char*> Reader::get_data(unsi
 {
     auto size { x_size * y_size };
     auto R { new char[size] }, G { new char[size] }, B { new char[size] };
-
-    for (auto i { 0 }, read { 0 }; i < size; i++, read = 0) {
-        stream.read(R + i, 1);
-        read += stream.gcount();
-        stream.read(G + i, 1);
-        read += stream.gcount();
-        stream.read(B + i, 1);
-        read += stream.gcount();
-
-        if (read != 3) {
-            delete[] R;
-            delete[] G;
-            delete[] B;
-            return { nullptr, nullptr, nullptr };
-        }
-    }
 
     return { reinterpret_cast<unsigned char*>(R), reinterpret_cast<unsigned char*>(G), reinterpret_cast<unsigned char*>(B) };
 }

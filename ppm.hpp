@@ -6,6 +6,7 @@ Author: David Holmqvist <daae19@student.bth.se>
 #include <exception>
 #include <iostream>
 #include <sstream>
+#include <fstream>
 
 #if !defined(PPM_READER_HPP)
 #define PPM_READER_HPP
@@ -20,8 +21,11 @@ constexpr char const* magic_number { "P6" };
 
 class Reader {
 private:
+    std::string result{};
+    
     std::stringstream stream;
-
+    
+    std::streamoff stream_size(std::istream& f);
     std::string get_magic_number();
     std::pair<unsigned, unsigned> get_dimensions();
     std::tuple<unsigned char*, unsigned char*, unsigned char*> get_data(unsigned x_size, unsigned y_size);
