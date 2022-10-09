@@ -5,3 +5,5 @@ Run using ./blur 12 ./data/im1.pmm ./data/im1out.pmm
 When the file is run, gmon.out is created. Convert it using "gprof blur gmon.out > blur.txt"
 
 Verify everything using ./verify ./blur ./threshold
+
+valgrind --tool=cachegrind ./threshold ./data/im4.ppm ./data/im4out
