@@ -25,8 +25,8 @@ Matrix blur(Matrix m, const int radius)
     Matrix scratch { PPM::max_dimension };
     auto dst { m };
 
-    for (auto x { 0 }; x < dst.get_x_size(); x++) {
-        for (auto y { 0 }; y < dst.get_y_size(); y++) {
+    for (auto y { 0 }; y < dst.get_y_size(); y++) {
+        for (auto x { 0 }; x < dst.get_x_size(); x++) {
             double w[Gauss::max_radius] {};
             Gauss::get_weights(radius, w);
 
@@ -55,8 +55,8 @@ Matrix blur(Matrix m, const int radius)
         }
     }
 
-    for (auto x { 0 }; x < dst.get_x_size(); x++) {
-        for (auto y { 0 }; y < dst.get_y_size(); y++) {
+    for (auto y { 0 }; y < dst.get_y_size(); y++) {
+        for (auto x { 0 }; x < dst.get_x_size(); x++) {
             double w[Gauss::max_radius] {};
             Gauss::get_weights(radius, w);
 
